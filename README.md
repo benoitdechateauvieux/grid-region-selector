@@ -5,7 +5,6 @@ Grid region is used in the [GHG Emissions calculation tool](https://ghgprotocol.
 
 ## Region selection
 - USA: eGRID subregions obtained from the [Power Profiler ZIP Code Tool with eGRID2018 Data](https://www.epa.gov/egrid/power-profiler#/)
-- Canada: 
 
 ## How to deploy?
 * `cdk deploy`      deploy this stack to your default AWS account/region
@@ -13,17 +12,24 @@ Grid region is used in the [GHG Emissions calculation tool](https://ghgprotocol.
 * `cdk synth`       emits the synthesized CloudFormation template
 
 ## How to invoke?
-Input parameter for the lambda function is a json document the following properties:
-- Country: 2 letters country code ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2))
-- zipcode: alphanumeric, country-specific
 
-Example:
+### Input
+Input parameter for the lambda function is a json document the following properties:
+- `country`: 2 letters country code ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2))
+- `zipcode`: alphanumeric, country-specific
 ```json
 {
-    "country": "CA",
-    "zipcode": "H3S1V6"
+    "country": "US",
+    "zipcode": "38940"
 }
 ```
-
+### Output
+A Grid region as defined in the Scope 2 "Purchased Electricity" Emission Factors table of the [GHG Emissions calculation tool](https://ghgprotocol.org/ghg-emissions-calculation-tool).
+```json
+{
+    "region": "SRSO"
+}
+```
 ## Backlog
-- Include eGRID sub-regions #2 et #3 (currently, only subregion #1 is returned)
+- USA: Include eGRID sub-regions #2 et #3 (currently, only subregion #1 is returned)
+- Support other countries
