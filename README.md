@@ -4,7 +4,7 @@ Select a grid region for GHG Scope 2 emissions calculation based on Country/Zip 
 Grid region is used in the [GHG Emissions calculation tool](https://ghgprotocol.org/ghg-emissions-calculation-tool)
 
 ## Region selection
-- USA: eGRID subregions is obtained from the [Power Profiler ZIP Code Tool with eGRID2018 Data](https://www.epa.gov/egrid/power-profiler#/)
+- USA: eGRID subregions obtained from the [Power Profiler ZIP Code Tool with eGRID2018 Data](https://www.epa.gov/egrid/power-profiler#/)
 - Canada: 
 
 ## How to deploy?
