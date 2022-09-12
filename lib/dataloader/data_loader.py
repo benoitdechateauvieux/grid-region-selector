@@ -13,24 +13,28 @@ tableName = os.environ['USA_EGRID_TABLE_NAME']
 
 def on_event(event, context):
    print("Loading eGRID data")
-   seen = set()
-   with open(csvFilePath, encoding='utf-8-sig') as csvf:
-      batch_size = 100
-      batch = []
+   print(event)
+   request_type = event['RequestType']
+   # We only populate the DDB table when the stack is created for the first time
+   if request_type == 'Create':
+      seen = set()
+      with open(csvFilePath, encoding='utf-8-sig') as csvf:
+         batch_size = 100
+         batch = []
 
-      for row in csv.DictReader(csvf):
-         zipcode = row['zip_character']
-         if zipcode in seen:
-            print("Duplicate value found :", zipcode)
-         else:
-            seen.add(zipcode)
-            if len(batch) >= batch_size:
-               write_to_dynamo(batch)
-               batch.clear()
-            batch.append(row)
+         for row in csv.DictReader(csvf):
+            zipcode = row['zip_character']
+            if zipcode in seen:
+               print("Duplicate value found :", zipcode)
+            else:
+               seen.add(zipcode)
+               if len(batch) >= batch_size:
+                  write_to_dynamo(batch)
+                  batch.clear()
+               batch.append(row)
 
-      if batch:
-         write_to_dynamo(batch)
+         if batch:
+            write_to_dynamo(batch)
 
    return {
       'statusCode': 200,
