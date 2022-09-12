@@ -1,7 +1,8 @@
-import { CfnOutput, Stack, StackProps, RemovalPolicy, CustomResource, Duration } from 'aws-cdk-lib';
+import { Stack, StackProps, RemovalPolicy, CustomResource, Duration } from 'aws-cdk-lib';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as customResources from 'aws-cdk-lib/custom-resources';
+import * as logs from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 import * as path from 'path';
 
@@ -33,9 +34,6 @@ export class GridRegionSelectorStack extends Stack {
     });
     usaEgridTable.grantReadData(selectorFunction);
 
-    const fnUrl = selectorFunction.addFunctionUrl({authType: lambda.FunctionUrlAuthType.NONE});
-    new CfnOutput(this, 'Selector function url', {value: fnUrl.url});
-
     //Load reference data
     const dataLoader = new lambda.Function(this, 'GridRegiondSelectorDataLoaderFunction', {
       runtime: lambda.Runtime.PYTHON_3_9,
@@ -49,6 +47,7 @@ export class GridRegionSelectorStack extends Stack {
     usaEgridTable.grantWriteData(dataLoader);
     const provider = new customResources.Provider(this, 'Provider', {
       onEventHandler: dataLoader,
+      logRetention: logs.RetentionDays.ONE_DAY
     });
     const resource = new CustomResource(this, 'Resource', {
       serviceToken: provider.serviceToken,
