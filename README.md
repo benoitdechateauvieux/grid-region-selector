@@ -1,15 +1,29 @@
-# Welcome to your CDK TypeScript project
+# Grid Region selector
 
-You should explore the contents of this project. It demonstrates a CDK app with an instance of a stack (`GridRegionSelectorStack`)
-which contains an Amazon SQS queue that is subscribed to an Amazon SNS topic.
+Select a grid region for GHG Scope 2 emissions calculation based on Country/Zip code.  
+Grid region is used in the [GHG Emissions calculation tool](https://ghgprotocol.org/ghg-emissions-calculation-tool)
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+## Region selection
+- USA: eGRID subregions is obtained from the [Power Profiler ZIP Code Tool with eGRID2018 Data](https://www.epa.gov/egrid/power-profiler#/)
+- Canada: 
 
-## Useful commands
-
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
+## How to deploy?
 * `cdk deploy`      deploy this stack to your default AWS account/region
 * `cdk diff`        compare deployed stack with current state
 * `cdk synth`       emits the synthesized CloudFormation template
+
+## How to invoke?
+Input parameter for the lambda function is a json document the following properties:
+- Country: 2 letters country code ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2))
+- zipcode: alphanumeric, country-specific
+
+Example:
+```json
+{
+    "country": "CA",
+    "zipcode": "H3S1V6"
+}
+```
+
+## TODO
+- Include eGRID sub-regions #2 et #3 (currently, only subregion #1 is returned)
