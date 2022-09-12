@@ -25,5 +25,5 @@ Example:
 }
 ```
 
-## TODO
+## Backlog
 - Include eGRID sub-regions #2 et #3 (currently, only subregion #1 is returned)

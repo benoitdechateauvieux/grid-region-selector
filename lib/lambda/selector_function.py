@@ -15,8 +15,12 @@ dynamodb = boto3.resource('dynamodb')
 
 def __get_usa_egrid_subregion(zip_code):
     table = dynamodb.Table(USA_EGRID_TABLE_NAME)
-    subregions = table.get_item(Key={'zip_code': zip_code})
-    return subregions['subregion1']
+    response = table.get_item(Key={'zip_code': zip_code})
+    if 'Item' in response:
+        subregions = response['Item']
+        return subregions
+    else:
+        raise NotFoundError("Unknown US zipcode")
 
 '''
 Input: {"country": "CA", "zipcode": "H3S1V6" }
@@ -25,12 +29,11 @@ Output: {"region": "Quebec"}
 @app.get("/")
 def get_region():
     country: str = app.current_event.get_query_string_value('country')
-    zipcode: str = app.current_event.get_query_string_value('zipcode')
+    zip_code: str = app.current_event.get_query_string_value('zipcode')
     if (country=='US'):
-        # TODO manage unknown zip code
-        return {"region": __get_usa_egrid_subregion(zipcode)}
+        return {"region": __get_usa_egrid_subregion(zip_code)}
     else:
-        raise NotFoundError
+        raise NotFoundError("Unknown country")
     return "Quebec"
 
 @logger.inject_lambda_context(log_event=True)
