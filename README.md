@@ -17,6 +17,7 @@ Grid region is used in the [GHG Emissions calculation tool](https://ghgprotocol.
 Input parameter for the lambda function is a json document the following properties:
 - `country`: 2 letters country code ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2))
 - `zipcode`: alphanumeric, country-specific
+    - For the USA: a 5-digits ZIP code with leading zeroes (ex: "38940" or "01742")
 ```json
 {
     "country": "US",
